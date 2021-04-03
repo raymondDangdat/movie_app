@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movies_api/widgets/movies_list.dart';
 
-import 'api_calls/api.dart';
-import 'models/movie.dart';
+import '../api_calls/api.dart';
+import '../models/movie.dart';
 
 class HomePage extends StatefulWidget {
   @override
