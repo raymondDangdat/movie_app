@@ -17,7 +17,19 @@ class APiService{
       List<Movies> movieList = movies.map((movie) => Movies.fromJson(movie)).toList();
       return movieList;
     }catch(err, stacktrace){
-      print(err);
+      throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
+    }
+  }
+
+  Future<List<Movies>> getMoviesByGenre(int movieId) async{
+    try{
+      print("API Call");
+      final url = '$basedUrl/discover/movie?/with_genres=$movieId&$apiKey';
+      final response = await _dio.get(url);
+      var movies = response.data['results'] as List;
+      List<Movies> movieList = movies.map((movie) => Movies.fromJson(movie)).toList();
+      return movieList;
+    }catch(err, stacktrace){
       throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
     }
   }

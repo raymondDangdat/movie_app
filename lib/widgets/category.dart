@@ -1,12 +1,17 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_api/bloc/genre_bloc/genre_bloc.dart';
 import 'package:movies_api/bloc/genre_bloc/genre_event.dart';
 import 'package:movies_api/bloc/genre_bloc/genre_state.dart';
+import 'package:movies_api/bloc/movie_bloc/movie_bloc.dart';
+import 'package:movies_api/bloc/movie_bloc/movie_bloc_event.dart';
+import 'package:movies_api/bloc/movie_bloc/movie_bloc_state.dart';
 import 'package:movies_api/models/genre.dart';
+import 'package:movies_api/models/models.dart';
 class BuildWidgetCategory extends StatefulWidget {
   final int selectedGenre;
   const BuildWidgetCategory({Key key, this.selectedGenre = 28});
@@ -29,8 +34,11 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
 
     return MultiBlocProvider(
         providers: [
-          BlocProvider<GenreBloc>(create: (_) => GenreBloc()..add(GenreEventStarted()))
-        ], child: _buildGenre(context));
+          BlocProvider<GenreBloc>(create: (_) => GenreBloc()..add(GenreEventStarted())
+          ),
+          BlocProvider<MovieBloc>(create: (_) => MovieBloc()..add(MovieEventStarted(selectedGenre, '')))
+        ], child: _buildGenre(context)
+    );
   }
 
   Widget _buildGenre(BuildContext context){
@@ -83,7 +91,62 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
               }else{
                 return Container();
               }
-            })
+            }),
+
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(child: Text("New Playing".toUpperCase(),style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold, color: Colors.white54, ),)
+        ),
+
+        SizedBox(height: 10.0,),
+        BlocBuilder<MovieBloc, MovieState>(
+          builder: (context, state){
+            if(state is MovieLoading){
+              return Center();
+            }else if(state is MovieLoaded){
+              List<Movies> movieList = state.movieList;
+
+              return Container(
+                height: 300,
+                child: ListView.separated(
+                    itemBuilder: (context, index){
+                      Movies movie = movieList[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                              imageBuilder: (context, imageProvider){
+                                return Container(
+                                  width: 190,
+                                  height: 250,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                    fit: BoxFit.cover)
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                    separatorBuilder: (context, index) => VerticalDivider(
+                      color: Colors.transparent,
+                      width: 5.0,
+                    ) ,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: movieList.length),
+              );
+            }else{
+              return Container();
+            }
+          },
+            )
       ],
     );
   }
