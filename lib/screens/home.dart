@@ -11,6 +11,7 @@ import 'package:movies_api/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc_event.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc_state.dart';
 import 'package:movies_api/models/models.dart';
+import 'package:movies_api/widgets/widgets.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -54,8 +55,6 @@ class _HomeState extends State<Home> {
                         );
                       }else if(state is MovieLoaded){
                         List<Movies> movies = state.movieList;
-                        print("Movies length");
-                        print(movies.length);
                         return Column(
                           children: [
                             CarouselSlider.builder(
@@ -63,6 +62,7 @@ class _HomeState extends State<Home> {
                                 itemBuilder: (BuildContext context, int index){
                                   Movies movie = movies[index];
                                   return Stack(
+                                    alignment: Alignment.bottomLeft,
                                     children: [
                                       ClipRRect(
                                         child: CachedNetworkImage(
@@ -81,7 +81,13 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      )
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: 15.0,
+                                            left: 15
+                                          ),
+                                      child: Text(movie.title.toUpperCase(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0, fontFamily: 'Gurmukhi MN'), overflow: TextOverflow.ellipsis,),)
                                     ],
                                   );
                                 }, options: CarouselOptions(
@@ -92,7 +98,15 @@ class _HomeState extends State<Home> {
                               pauseAutoPlayOnTouch: true,
                               viewportFraction: 0.8,
                               enlargeCenterPage: true,
-                            ))
+                            )),
+                            Padding(padding: EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 12.0,),
+                                BuildWidgetCategory(),
+                              ],
+                            ),)
                           ],
                         );
                       }else{

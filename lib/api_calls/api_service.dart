@@ -21,4 +21,16 @@ class APiService{
       throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
     }
   }
+
+  Future<List<Genre>> getGenreList() async{
+    try{
+      final response = await _dio.get('$basedUrl/genre/movie/list?$apiKey');
+      var genres = response.data['genres'] as List;
+      List<Genre> genreList = genres.map((gen) => Genre.fromJson(gen)).toList();
+      return genreList;
+    }catch(err, stacktrace){
+      print(err);
+      throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
+    }
+  }
 }
