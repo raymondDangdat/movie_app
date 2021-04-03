@@ -61,22 +61,31 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
                           Genre genre = genres[index];
                           return Column(
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black45),
-                                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                                  color: (genre.id == selectedGenre) ?
-                                      Colors.black45
-                                      : Colors.white,
+                              GestureDetector(
+                                onTap:(){
+                                  setState(() {
+                                    Genre genre = genres[index];
+                                    selectedGenre = genre.id;
+                                    context.read<MovieBloc>().add(MovieEventStarted(selectedGenre, ''));
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black45),
+                                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                                    color: (genre.id == selectedGenre) ?
+                                        Colors.black45
+                                        : Colors.white,
+                                  ),
+                                  child: Text(genre.name.toUpperCase(),style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: (genre.id == selectedGenre)
+                                      ? Colors.white
+                                        : Colors.black,
+                                    fontFamily: 'Gurmukhi MN'
+                                  ),),
                                 ),
-                                child: Text(genre.name.toUpperCase(),style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: (genre.id == selectedGenre)
-                                    ? Colors.white
-                                      : Colors.black,
-                                  fontFamily: 'Gurmukhi MN'
-                                ),),
                               )
                             ],
                           );
@@ -130,6 +139,48 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
                                   ),
                                 );
                               },
+                              placeholder: (context, url) => Container(
+                                width: 190.0,
+                                height: 350.0,
+                                child: Center(
+                                  child: Platform.isAndroid
+                                  ? CircularProgressIndicator()
+                                  : CupertinoActivityIndicator(),
+
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                width: 190,
+                                height: 250,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/noimage.png')
+                                  )                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Container(
+                            width: 180,
+                            child: Text(movie.title.toUpperCase(), style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.0,
+                              fontFamily: 'Gurmukhi MN'
+                            ), overflow: TextOverflow.ellipsis,),
+                          ),
+
+                          Container(
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.yellowAccent, size: 14,),
+                                Icon(Icons.star, color: Colors.yellowAccent, size: 14,),
+                                Icon(Icons.star, color: Colors.yellowAccent, size: 14,),
+                                Icon(Icons.star, color: Colors.yellowAccent, size: 14,),
+                                Icon(Icons.star, color: Colors.yellowAccent, size: 14,),
+                                Text(movie.voteAverage.toString())
+                              ],
                             ),
                           )
                         ],
@@ -137,7 +188,7 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
                     },
                     separatorBuilder: (context, index) => VerticalDivider(
                       color: Colors.transparent,
-                      width: 5.0,
+                      width: 15.0,
                     ) ,
                     scrollDirection: Axis.horizontal,
                     itemCount: movieList.length),

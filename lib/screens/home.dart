@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc_event.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc_state.dart';
+import 'package:movies_api/bloc/person_bloc/person.dart';
 import 'package:movies_api/models/models.dart';
 import 'package:movies_api/widgets/widgets.dart';
 class Home extends StatefulWidget {
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
     return MultiBlocProvider(
         providers: [
           BlocProvider<MovieBloc>(create: (_) => MovieBloc()..add(MovieEventStarted(0, '')), ),
+          BlocProvider<PersonBloc>(create: (_) => PersonBloc()..add(PersonEventStarted()),)
         ],   child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -105,6 +107,87 @@ class _HomeState extends State<Home> {
                               children: [
                                 SizedBox(height: 12.0,),
                                 BuildWidgetCategory(),
+                                Text('Trending person on this week'.toUpperCase(), style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold, fontFamily: 'Gurmukhi MN'),),
+                                SizedBox(height: 12.0,),
+                                Column(
+                                  children: [
+                                    BlocBuilder<PersonBloc, PersonState>(
+                                        builder: (context, state){
+                                          if(state is PersonLoading){
+                                            return Center();
+                                          }else if(state is PersonLoaded){
+                                            List<Person> personList = state.personList;
+                                            // print(personList);
+                                            return Container(
+                                              height: 110,
+                                              child: ListView.separated(
+                                                scrollDirection: Axis.horizontal,
+                                                  itemBuilder: (context, index){
+                                                  Person person = personList[index];
+                                                  return Container(
+                                                    child: Column(
+                                                      children: [
+                                                        Card(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(100.0),
+                                                          ),
+                                                          elevation: 3.0,
+                                                          child: ClipRRect(
+                                                            child: CachedNetworkImage(
+                                                              imageUrl: 'https://image.tmdb.org/t/p/w200${person.profilePath}',
+                                                              imageBuilder: (context, imageProvider){
+                                                                return Container(
+                                                                  width: 80.0,
+                                                                  height: 80.0,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                                                                    image: DecorationImage(
+                                                                        image: imageProvider, fit: BoxFit.cover)
+                                                                  ),
+                                                                );
+                                                              },
+                                                              placeholder: (context, url) => Container(
+                                                                width: 80.0,
+                                                                height: 80.0,
+                                                                child: Center(
+                                                                  child: Platform.isAndroid
+                                                                  ? CircularProgressIndicator()
+                                                                  : CupertinoActivityIndicator(),
+
+                                                                ),
+                                                              ),
+                                                              errorWidget: (context, url, error) => Container(
+                                                                width: 80.0,
+                                                                height: 80.0,
+                                                                decoration: BoxDecoration(
+                                                                  image: DecorationImage(
+                                                                    image: AssetImage('assets/noimage.png'),
+                                                                  )
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Center(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                  },
+                                                  separatorBuilder: (context, index) =>
+                                                  VerticalDivider(
+                                                    color: Colors.transparent,
+                                                    width: 5.0,
+                                                  ),
+                                                  itemCount: personList.length),
+                                            );
+                                          }else{
+                                            return Container(child: Text("Something went wrong"),);
+                                          }
+                                        })
+                                  ],
+                                )
                               ],
                             ),)
                           ],

@@ -45,4 +45,16 @@ class APiService{
       throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
     }
   }
+
+  Future<List<Person>> getTrendingPerson() async{
+    try{
+      final response = await _dio.get('$basedUrl/trending/person/week?$apiKey');
+      var persons = response.data['results'] as List;
+      List<Person> personList = persons.map((person) => Person.fromJson(person)).toList();
+      return personList;
+    }catch(err, stacktrace){
+      print(err);
+      throw Exception('Exception occurred: $err with stacktrace: $stacktrace');
+    }
+  }
 }
