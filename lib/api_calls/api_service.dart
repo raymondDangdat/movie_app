@@ -6,7 +6,7 @@ class APiService{
   final _dio = Dio();
 
   final String basedUrl = "https://api.themoviedb.org/3";
-  final String apiKey = 'api_key=$key';
+  final String apiKey = 'api_key=$KEY';
 
   Future<List<Movies>> getNowPlayingMovies() async{
     try{
