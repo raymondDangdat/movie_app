@@ -1,5 +1,10 @@
 # movies_api
 
+This is a project that consumes The Movies DB open APIs to demonstrate the use of Bloc, network image caching, fetching of data using dio, making use of URL launcher to play music on YouTube.
+
+The Project is from a YouTube speed code tutorial. Changes made to the video tutorials though.
+
+
 A new Flutter project.
 
 ## Getting Started
