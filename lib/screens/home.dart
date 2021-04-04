@@ -13,6 +13,8 @@ import 'package:movies_api/bloc/movie_bloc/movie_bloc_state.dart';
 import 'package:movies_api/bloc/person_bloc/person.dart';
 import 'package:movies_api/models/models.dart';
 import 'package:movies_api/widgets/widgets.dart';
+
+import 'screens.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -63,34 +65,39 @@ class _HomeState extends State<Home> {
                                 itemCount: movies.length,
                                 itemBuilder: (BuildContext context, int index){
                                   Movies movie = movies[index];
-                                  return Stack(
-                                    alignment: Alignment.bottomLeft,
-                                    children: [
-                                      ClipRRect(
-                                        child: CachedNetworkImage(
-                                          imageUrl: 'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
-                                          height: MediaQuery.of(context).size.height / 3,
-                                          width: MediaQuery.of(context).size.width,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) => Platform.isAndroid? CircularProgressIndicator()
-                                          : CupertinoActivityIndicator(),
-                                          errorWidget: (context, url, error) => Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage('assets/noimage.png'),
-                                              )
+                                  return GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetailScreen(movie: movie)));
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.bottomLeft,
+                                      children: [
+                                        ClipRRect(
+                                          child: CachedNetworkImage(
+                                            imageUrl: 'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                                            height: MediaQuery.of(context).size.height / 3,
+                                            width: MediaQuery.of(context).size.width,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) => Platform.isAndroid? CircularProgressIndicator()
+                                            : CupertinoActivityIndicator(),
+                                            errorWidget: (context, url, error) => Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage('assets/noimage.png'),
+                                                )
+                                              ),
                                             ),
                                           ),
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
                                         ),
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: 15.0,
-                                            left: 15
-                                          ),
-                                      child: Text(movie.title.toUpperCase(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0, fontFamily: 'Gurmukhi MN'), overflow: TextOverflow.ellipsis,),)
-                                    ],
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 15.0,
+                                              left: 15
+                                            ),
+                                        child: Text(movie.title.toUpperCase(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0, fontFamily: 'Gurmukhi MN'), overflow: TextOverflow.ellipsis,),)
+                                      ],
+                                    ),
                                   );
                                 }, options: CarouselOptions(
                               enableInfiniteScroll: true,
@@ -169,8 +176,15 @@ class _HomeState extends State<Home> {
                                                           ),
                                                         ),
                                                         Container(
-                                                          child: Center(),
-                                                        )
+                                                          child: Center(
+                                                            child: Text(person.name.toUpperCase(), style: TextStyle(fontSize: 8.0, fontFamily: 'Diwan Mishafi'),),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Center(
+                                                            child: Text(person.knownForDepartment.toUpperCase(), style: TextStyle(fontSize: 8.0, fontFamily: 'Diwan Mishafi'),),
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
                                                   );
