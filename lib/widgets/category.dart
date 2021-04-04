@@ -12,6 +12,7 @@ import 'package:movies_api/bloc/movie_bloc/movie_bloc_event.dart';
 import 'package:movies_api/bloc/movie_bloc/movie_bloc_state.dart';
 import 'package:movies_api/models/genre.dart';
 import 'package:movies_api/models/models.dart';
+import 'package:movies_api/screens/movie_details_screen.dart';
 class BuildWidgetCategory extends StatefulWidget {
   final int selectedGenre;
   const BuildWidgetCategory({Key key, this.selectedGenre = 28});
@@ -117,45 +118,51 @@ class _BuildWidgetCategoryState extends State<BuildWidgetCategory> {
               List<Movies> movieList = state.movieList;
 
               return Container(
-                height: 300,
+                height: 340,
                 child: ListView.separated(
+                  physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index){
                       Movies movie = movieList[index];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            child: CachedNetworkImage(
-                              imageUrl: 'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
-                              imageBuilder: (context, imageProvider){
-                                return Container(
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetailScreen(movie: movie,)));
+                            },
+                            child: ClipRRect(
+                              child: CachedNetworkImage(
+                                imageUrl: 'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                                imageBuilder: (context, imageProvider){
+                                  return Container(
+                                    width: 190,
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                      fit: BoxFit.cover)
+                                    ),
+                                  );
+                                },
+                                placeholder: (context, url) => Container(
+                                  width: 190.0,
+                                  height: 250.0,
+                                  child: Center(
+                                    child: Platform.isAndroid
+                                    ? CircularProgressIndicator()
+                                    : CupertinoActivityIndicator(),
+
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
                                   width: 190,
                                   height: 250,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
                                     image: DecorationImage(
-                                        image: imageProvider,
-                                    fit: BoxFit.cover)
-                                  ),
-                                );
-                              },
-                              placeholder: (context, url) => Container(
-                                width: 190.0,
-                                height: 350.0,
-                                child: Center(
-                                  child: Platform.isAndroid
-                                  ? CircularProgressIndicator()
-                                  : CupertinoActivityIndicator(),
-
+                                        image: AssetImage('assets/noimage.png')
+                                    )                                ),
                                 ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                width: 190,
-                                height: 250,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage('assets/noimage.png')
-                                  )                                ),
                               ),
                             ),
                           ),

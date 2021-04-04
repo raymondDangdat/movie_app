@@ -128,6 +128,7 @@ class _HomeState extends State<Home> {
                                             return Container(
                                               height: 110,
                                               child: ListView.separated(
+                                                physics: BouncingScrollPhysics(),
                                                 scrollDirection: Axis.horizontal,
                                                   itemBuilder: (context, index){
                                                   Person person = personList[index];
