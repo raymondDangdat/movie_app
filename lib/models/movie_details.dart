@@ -1,3 +1,5 @@
+import 'package:movies_api/models/models.dart';
+
 class MovieDetail{
   final String id;
   final String title;
@@ -8,8 +10,11 @@ class MovieDetail{
   final String overview;
   final String voteAverage;
   final String voteCount;
+  final String releaseDate;
+  final String runtime;
 
   String trailerId;
+  MovieImage movieImage;
 
   MovieDetail(
   {
@@ -22,7 +27,9 @@ class MovieDetail{
   this.overview,
   this.voteAverage,
   this.voteCount,
-  this.trailerId
+    this.releaseDate,
+    this.runtime,
+  this.trailerId,
 });
 
   factory MovieDetail.fromJson(dynamic json){
@@ -39,6 +46,8 @@ class MovieDetail{
       overview: json['overview'],
       voteAverage: json['vote_average'].toString(),
       voteCount: json['vote_count'].toString(),
+      releaseDate: json['release_date'],
+      runtime: json['runtime'].toString(),
     );
     }
 }
