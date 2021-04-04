@@ -5,3 +5,4 @@ export 'person.dart';
 export 'movie_details.dart';
 export 'movie_image.dart';
 export 'screenshot.dart';
+export 'cast_list.dart';

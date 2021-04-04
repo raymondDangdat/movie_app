@@ -64,6 +64,7 @@ class APiService{
       MovieDetail movieDetail = MovieDetail.fromJson(response.data);
       movieDetail.trailerId = await getYoutubeId(movieId);
       movieDetail.movieImage = await getMovieImage(movieId);
+      movieDetail.castList = await getCastList(movieId);
       return movieDetail;
     }catch(error, stacktrace){
       print(error);
@@ -86,6 +87,22 @@ class APiService{
     try{
       final response = await _dio.get('$basedUrl/movie/$movieId/images?$apiKey');
       return MovieImage.fromJson(response.data);
+    }catch(error, stacktrace){
+      print(error);
+      throw Exception('Exception occurred: $error with stacktrace: $stacktrace');
+    }
+  }
+
+  Future<List<Cast>> getCastList(int movieId) async{
+    try{
+      final response = await _dio.get('$basedUrl/movie/$movieId/credits?$apiKey');
+      var list = response.data['cast'] as List;
+      List<Cast> castList = list.map((data) => Cast(
+        name: data['name'],
+        profilePath: data['profile_path'],
+        character: data['character'],
+      )).toList();
+      return castList;
     }catch(error, stacktrace){
       print(error);
       throw Exception('Exception occurred: $error with stacktrace: $stacktrace');

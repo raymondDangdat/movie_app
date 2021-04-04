@@ -15,6 +15,8 @@ class MovieDetail{
 
   String trailerId;
   MovieImage movieImage;
+  List<Cast> castList;
+
 
   MovieDetail(
   {
